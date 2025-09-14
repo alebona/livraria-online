@@ -1,0 +1,43 @@
+{% extends "base.html" %} 
+
+{% block content %} 
+<div class="container mt-4"> 
+    <h2>Carrinho de Compras</h2> 
+    
+    {% if livros %} 
+        <table class="table table-striped"> 
+            <thead> 
+                <tr> 
+                    <th>Livro</th> 
+                    <th>Preço</th> 
+                    <th>Quantidade</th> 
+                    <th>Subtotal</th> 
+                    <th>Ações</th> 
+                </tr> 
+            </thead> 
+            <tbody> 
+                {% for item in livros %} 
+                    <tr> 
+                        <td>{{ item.livro.titulo }}</td> 
+                        <td>R$ {{ item.livro.preco }}</td> 
+                        <td> 
+                            <input type="number" value="{{ item.quantidade }}" min="1" style="width: 60px;"
+                                   onchange="window.location.href='{% url 'alterar_quantidade' item.livro.id 0 %}'.replace('/0/', '/' + this.value + '/');">
+                        </td> 
+                        <td>R$ {{ item.subtotal }}</td> 
+                        <td> 
+                            <a href="{% url 'remover_do_carrinho' item.livro.id %}" class="btn btn-sm btn-danger">Remover</a> 
+                        </td> 
+                    </tr> 
+                {% endfor %} 
+            </tbody> 
+        </table> 
+        
+        <h4>Total: R$ {{ total }}</h4> 
+        
+        <a href="{% url 'finalizar_pedido' %}" class="btn btn-success">Finalizar Compra</a> 
+    {% else %} 
+        <p>O carrinho está vazio.</p> 
+    {% endif %} 
+</div> 
+{% endblock %}

@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Livraria Online{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'estilo.css' %}?v={{ timestamp }}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">📚 Livraria</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    {% if user.is_authenticated and user.userprofile.perfil == "Administrador" %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="gestaoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Gestão
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="gestaoDropdown">
+                                <li><a class="dropdown-item" href="{% url 'cadastrar_livro' %}">Cadastrar Livro</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav">
+                    <!-- Carrinho -->
+                    <li class="nav-item position-relative me-3">
+                        <a class="nav-link" href="{% url 'ver_carrinho' %}">
+                            <i class="bi bi-cart3"></i> Carrinho
+                            {% if total_itens_carrinho %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ total_itens_carrinho }}
+                                    <span class="visually-hidden">itens no carrinho</span>
+                                </span>
+                            {% endif %}
+                        </a>
+                    </li>
+
+                    <!-- Meus Pedidos -->
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'historico_pedidos' %}">
+                                <i class="bi bi-box-seam"></i> Meus Pedidos
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav ms-5">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="#">Olá, {{ user.username }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Sair</a></li>
+                    {% else %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Entrar</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'registrar' %}">Registrar</a></li>
+                    {% endif %}                  
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Conteúdo principal -->
+    <main class="flex-grow-1">
+        <div class="container mt-2">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    {% include "footer.html" %}
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Loader JS -->
+    <script src="{% static 'js/loader.js' %}"></script>
+</body>
+</html>

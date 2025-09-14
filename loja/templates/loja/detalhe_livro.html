@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="{{ livro.capa }}" class="img-fluid rounded-start capa-img" alt="{{ livro.titulo }}">
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h3 class="card-title">{{ livro.titulo }}</h3>
+                    <p class="card-text"><strong>Autor:</strong> {{ livro.autor }}</p>
+                    <p class="card-text"><strong>Editora:</strong> {{ livro.editora }}</p>
+                    <p class="card-text"><strong>Data de publicação:</strong> {{ livro.data_publicacao }}</p>
+                    <p class="card-text"><strong>Categoria:</strong> {{ livro.categoria }}</p>
+                    <p class="card-text"><strong>ISBN:</strong> 
+                        {% if livro.isbn_13 and livro.isbn_13 != "N/A" %}
+                            {{ livro.isbn_13 }}
+                        {% else %}
+                            {{ livro.isbn_10 }}
+                        {% endif %}
+                    </p>
+                    <p class="card-text"><strong>Páginas:</strong> {{ livro.paginas }}</p>
+                    <p class="card-text"><strong>Nota:</strong> {{ livro.rating }}</p>
+                    <p class="card-text"><strong>Preço:</strong> R$ {{ livro.preco }}</p>
+                    <p class="card-text"><strong>Sinopse:</strong></p>
+                    <p>{{ livro.sinopse|default:"(sem descrição)" }}</p>
+
+                    {% if user.is_authenticated and user.userprofile.perfil == "Administrador" %}
+                        <a href="{% url 'cadastrar_livro' %}" class="btn btn-secondary">⬅ Voltar</a>
+                    {% else %}
+                        <a href="{% url 'home' %}" class="btn btn-secondary">⬅ Voltar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

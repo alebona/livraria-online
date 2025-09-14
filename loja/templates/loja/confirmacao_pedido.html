@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Pedido Confirmado{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Pedido Confirmado</h2>
+    <p>Pedido Nº {{ pedido.id }}</p>
+    <p>Forma de Pagamento: {{ pedido.forma_pagamento }}</p>
+    <p>Total: R$ {{ pedido.total }}</p>
+
+    <h4>Itens:</h4>
+    <ul class="list-group mb-3">
+        {% for item in pedido.itens.all %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ item.livro.titulo }} x {{ item.quantidade }}
+                <span>R$ {{ item.subtotal }}</span>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'home' %}" class="btn btn-primary">Voltar à Loja</a>
+</div>
+{% endblock %}

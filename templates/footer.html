@@ -1,0 +1,30 @@
+<!-- Footer -->
+<footer class="bg-dark text-light pt-5 pb-3 mt-5">
+    <div class="container">
+        <div class="row">
+            <!-- Sobre -->
+            <div class="col-md-4 mb-3">
+                <h5>Sobre a Livraria Online</h5>
+                <p>Uma plataforma completa para explorar, buscar e comprar livros de todos os gêneros. Nossa missão é conectar leitores às melhores obras do mundo.</p>
+            </div>
+
+            <!-- Links -->
+            <div class="col-md-4 mb-3">
+                <h5>Links Úteis</h5>
+                <ul class="list-unstyled">
+                    <li><a href="{% url 'home' %}" class="text-light text-decoration-none">Loja</a></li>
+                    <li><a href="{% url 'busca_avancada' %}" class="text-light text-decoration-none">Busca Avançada</a></li>
+                    {% if user.is_authenticated and user.userprofile.perfil == 'Administrador' %}
+                        <li><a href="{% url 'cadastrar_livro' %}" class="text-light text-decoration-none">Gestão de Livros</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <hr class="bg-light">
+
+        <div class="text-center small">
+            &copy; {{ current_year }} Livraria Online. Todos os direitos reservados.
+        </div>
+    </div>
+</footer>

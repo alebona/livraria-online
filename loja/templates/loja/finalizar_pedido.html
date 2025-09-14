@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Finalizar Compra{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Finalizar Pedido</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Livro</th>
+                <th>Quantidade</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in livros %}
+            <tr>
+                <td>{{ item.livro.titulo }}</td>
+                <td>{{ item.quantidade }}</td>
+                <td>R$ {{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h4>Total: R$ {{ total }}</h4>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="forma_pagamento" class="form-label">Forma de Pagamento:</label>
+            <select name="forma_pagamento" id="forma_pagamento" class="form-select" required>
+                <option value="">Selecione</option>
+                <option value="Cartão de Crédito">Cartão de Crédito</option>
+                <option value="Boleto">Boleto</option>
+                <option value="Pix">Pix</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">Finalizar Compra</button>
+    </form>
+</div>
+{% endblock %}

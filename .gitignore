@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pyt
+
+# Virtual environment
+venv/
+ENV/
+.env/
+.env.local
+.env.*.local
+.env
+
+# Django
+*.sqlite3           # se usar SQLite local
+db.sqlite3
+*.log
+*.pot
+*.pyc
+*.coverage
+htmlcov/
+*.mo
+
+# Django migrations (opcional, mas geralmente não se versiona migrações de apps)
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# IDEs e editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS generated files
+.DS_Store
+Thumbs.db

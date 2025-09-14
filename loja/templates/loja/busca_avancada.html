@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Busca Avançada - Livraria Online{% endblock %}
+
+{% block content %}
+<div class="text-center mb-4">
+    <h1>Busca Avançada 📚</h1>
+    <p class="lead">Filtre os livros por Categoria, Nome ou Autor.</p>
+</div>
+
+<!-- Form de busca -->
+<div class="container mt-4">
+    <form method="get" class="row g-3 mb-4 justify-content-center">
+        <div class="col-md-3">
+            <input type="text" name="titulo" class="form-control" placeholder="Nome do Livro" value="{{ request.GET.titulo }}">
+        </div>
+        <div class="col-md-3">
+            <select name="autor" class="form-select">
+                <option value="">Todos os Autores</option>
+                {% for a in autores %}
+                    <option value="{{ a.id }}" {% if request.GET.autor == a.id|stringformat:"s" %}selected{% endif %}>{{ a.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select name="categoria" class="form-select">
+                <option value="">Todas as Categorias</option>
+                {% for cat in categorias %}
+                    <option value="{{ cat.id }}" {% if request.GET.categoria == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+    </form>
+</div>
+
+<!-- Resultados -->
+{% if livros %}
+<div class="row row-cols-1 row-cols-md-4 g-4">
+    {% for livro in livros %}
+        <div class="col">
+            <div class="card hover-card h-100 shadow-sm">
+                <div class='tag-categoria'>
+                    <span class="badge rounded-pill text-bg-info">{{ livro.categoria }}</span>
+                </div>
+                <img src="{{ livro.capa|default:'/static/img/default_book.png' }}" 
+                     class="card-img-top" alt="{{ livro.titulo }}">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ livro.titulo }}</h5>
+                    <p class="card-text">{{ livro.autor }}</p>
+                    <p class="card-text">Publicado em: {{ livro.data_publicacao|date:"d/m/Y" }}</p>
+                    <p class="card-text"><strong>R$ {{ livro.preco }}</strong></p>
+                    
+                    <!-- Rating em estrelas -->
+                    <p class="card-text mb-2">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= livro.rating|default:0 %}
+                                ★
+                            {% else %}
+                                ☆
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+
+                    <a href="{% url 'detalhe_livro' livro.pk %}" class="btn btn-primary mt-auto">Detalhes</a>
+                    <a href="{% url 'adicionar_carrinho' livro.id %}" class="btn btn-success mt-1">Adicionar ao Carrinho</a>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center mt-4">
+    <p class="lead">Nenhum livro encontrado para os filtros selecionados.</p>
+</div>
+{% endif %}
+{% endblock %}
