@@ -14,10 +14,6 @@ def verifica_cadastro(model, nome, default="Desconhecido"):
     obj, _ = model.objects.get_or_create(nome=nome)
     return obj
 
-from urllib.parse import quote_plus
-import requests
-from pprint import pprint
-
 def buscar_livro_google(titulo=None, autor=None, max_results=20):
     """
     Busca livros no Google Books pelo título e/ou autor,
