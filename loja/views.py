@@ -12,6 +12,7 @@ from datetime import datetime
 
 def home(request):
     # Busca os top 12 livros (pode ser por rating, por exemplo) e excluindo sem categoria
+    #TODO: buscar o id da categoria 'Sem Categoria' para excluir o id correto
     top_livros = Livro.objects.all().exclude(categoria=4).order_by('-rating')[:12]
 
     return render(request, 'home.html', {
