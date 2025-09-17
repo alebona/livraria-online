@@ -18,57 +18,77 @@ from urllib.parse import quote_plus
 import requests
 from pprint import pprint
 
-def buscar_livro_google(titulo):
+def buscar_livro_google(titulo=None, autor=None, max_results=20):
     """
-    Busca um livro no Google Books pelo título e retorna os dados principais.
+    Busca livros no Google Books pelo título e/ou autor,
+    retornando até max_results resultados como lista de dicionários.
+    Pode pesquisar:
+      - Somente título
+      - Somente autor
+      - Ambos
     """
-    query = quote_plus(titulo)
-    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&maxResults=1"
+    # Se nenhum parâmetro foi passado, retorna lista vazia
+    if not titulo and not autor:
+        return []
+
+    # Monta a query dinamicamente
+    query_parts = []
+    if titulo:
+        query_parts.append(quote_plus(titulo))
+    if autor:
+        query_parts.append(f"inauthor:{quote_plus(autor)}")
+    query = "+".join(query_parts)
+
+    url = f"https://www.googleapis.com/books/v1/volumes?q={query}&maxResults={max_results}"
     response = requests.get(url)
     data = response.json()
 
     if "items" not in data or len(data["items"]) == 0:
-        return None
+        return []
 
-    # Seleciona o item com maior rating
-    items = data["items"]
-    items.sort(key=lambda x: x.get("volumeInfo", {}).get("averageRating", 0), reverse=True)
-    book_info = items[0]["volumeInfo"]
+    resultados = []
+    for item in data["items"]:
+        book_info = item.get("volumeInfo", {})
+        sale_info = item.get("saleInfo", {})
 
-    # ISBNs
-    isbn_13 = "N/A"
-    isbn_10 = "N/A"
-    for identifier in book_info.get("industryIdentifiers", []):
-        if identifier["type"] == "ISBN_13":
-            isbn_13 = identifier["identifier"]
-        elif identifier["type"] == "ISBN_10":
-            isbn_10 = identifier["identifier"]
+        # ISBNs
+        isbn_13 = "N/A"
+        isbn_10 = "N/A"
+        for identifier in book_info.get("industryIdentifiers", []):
+            if identifier["type"] == "ISBN_13":
+                isbn_13 = identifier["identifier"]
+            elif identifier["type"] == "ISBN_10":
+                isbn_10 = identifier["identifier"]
 
-    # Preço
-    sale_info = items[0].get("saleInfo", {})
-    preco = None
-    if sale_info.get("saleability") == "FOR_SALE":
-        list_price = sale_info.get("listPrice")
-        if list_price:
-            preco = list_price.get("amount")
+        # Preço
+        preco = None
+        if sale_info.get("saleability") == "FOR_SALE":
+            list_price = sale_info.get("listPrice")
+            if list_price:
+                preco = list_price.get("amount")
 
-    dados = {
-        "titulo": book_info.get("title", titulo),
-        "autor": ", ".join(book_info.get("authors", [])) or "Autor Desconhecido",
-        "editora": book_info.get("publisher", "Editora Desconhecida"),
-        "data_publicacao": book_info.get("publishedDate", "1901-01-01"),
-        "sinopse": book_info.get("description", ""),
-        "isbn_13": isbn_13,
-        "isbn_10": isbn_10,
-        "paginas": book_info.get("pageCount", 0),
-        "categoria": ", ".join(book_info.get("categories", [])) or "Sem Categoria",
-        "rating": book_info.get("averageRating", 0),
-        "capa": book_info.get("imageLinks", {}).get("thumbnail", ""),
-        "preco": preco if preco is not None else 10.0
-    }
+        # Data de publicação
+        published_date = book_info.get("publishedDate", "1901-01-01")
+        if len(published_date) == 4:
+            published_date = f"{published_date}-01-01"
 
-    return dados
+        resultados.append({
+            "id_google": item.get("id"),
+            "titulo": book_info.get("title", titulo or "Título Desconhecido"),
+            "autor": ", ".join(book_info.get("authors", [])) or (autor or "Autor Desconhecido"),
+            "editora": book_info.get("publisher", "Editora Desconhecida"),
+            "data_publicacao": published_date,
+            "sinopse": book_info.get("description", ""),
+            "isbn_13": isbn_13,
+            "isbn_10": isbn_10,
+            "paginas": book_info.get("pageCount", 0),
+            "categoria": ", ".join(book_info.get("categories", [])) or "Sem Categoria",
+            "rating": book_info.get("averageRating", 0),
+            "capa": book_info.get("imageLinks", {}).get("thumbnail", ""),
+            "preco": preco if preco is not None else 10.0
+        })
 
+    return resultados
 
 def verifica_cadastro_livro(book_info):
     

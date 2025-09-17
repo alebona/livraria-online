@@ -15,7 +15,7 @@
                     <li><a href="{% url 'home' %}" class="text-light text-decoration-none">Loja</a></li>
                     <li><a href="{% url 'busca_avancada' %}" class="text-light text-decoration-none">Busca Avançada</a></li>
                     {% if user.is_authenticated and user.userprofile.perfil == 'Administrador' %}
-                        <li><a href="{% url 'cadastrar_livro' %}" class="text-light text-decoration-none">Gestão de Livros</a></li>
+                        <li><a href="{% url 'pesquisar_livro' %}" class="text-light text-decoration-none">Gestão de Livros</a></li>
                     {% endif %}
                 </ul>
             </div>

@@ -27,7 +27,7 @@
                     <p>{{ livro.sinopse|default:"(sem descrição)" }}</p>
 
                     {% if user.is_authenticated and user.userprofile.perfil == "Administrador" %}
-                        <a href="{% url 'cadastrar_livro' %}" class="btn btn-secondary">⬅ Voltar</a>
+                        <a href="{% url 'pesquisar_livro' %}" class="btn btn-secondary">⬅ Voltar</a>
                     {% else %}
                         <a href="{% url 'home' %}" class="btn btn-secondary">⬅ Voltar</a>
                     {% endif %}

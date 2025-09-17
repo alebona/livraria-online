@@ -1,31 +1,107 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
 <div class="container mt-5">
-    <h2>Cadastrar Livro</h2>
-    <p class="text-muted">Digite o título do livro e clique em <strong>Importar</strong>. O sistema verificará se já existe no banco e, se não existir, buscará informações no Google Books.</p>
+    <h2>Pesquisar Livro</h2>
+    <p class="text-muted">Digite o título e/ou autor do livro para buscar no Google Books.</p>
 
-    {% if messages %}
-        <div class="mt-3">
-            {% for message in messages %}
-               <!-- <div class="alert alert-{{ message.tags }}">{{ message }}</div>-->
-            {% endfor %}
-        </div>
-    {% endif %}
-
+    <!-- Formulário de pesquisa -->
     <form method="post" class="mt-4">
         {% csrf_token %}
+
         <div class="mb-3">
-            {{ form.titulo.label_tag }}
-            {{ form.titulo }}
+            <label for="id_titulo" class="form-label">Título</label>
+            <input type="text" name="titulo" id="id_titulo" class="form-control w-50" value="{{ request.POST.titulo|default:'' }}">
         </div>
-        <button type="submit" class="btn btn-primary">📚 Importar</button>
+
+        <div class="mb-3">
+            <label for="id_autor" class="form-label">Autor</label>
+            <input type="text" name="autor" id="id_autor" class="form-control w-50" placeholder="Nome do autor (opcional)" value="{{ request.POST.autor|default:'' }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">🔍 Pesquisar</button>
     </form>
 
-    <div id="loader" style="display: none; margin-top:20px; text-align:center;">
-        <div class="barra">
-            <div id="progress"></div>
-        </div>
-        <p id="status">Iniciando...</p>
-    </div>
+    <hr class="my-4">
+
+    <!-- Resultados -->
+    {% if resultados %}
+    <form method="post" action="{% url 'importar_livro' %}">
+        {% csrf_token %}
+        <h4>Resultados encontrados:</h4>
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" id="select_all"></th>
+                    <th scope="col">Capa</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Autor</th>
+                    <th scope="col">Editora</th>
+                    <th scope="col">Publicação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for livro in resultados %}
+                <tr>
+                    <td>
+                        <input type="checkbox" name="ids_google[]" value="{{ livro.id_google }}">
+                        
+                        <!-- Hidden inputs vinculados a este livro -->
+                        <input type="hidden" name="titulos_{{ livro.id_google }}" value="{{ livro.titulo }}">
+                        <input type="hidden" name="autores_{{ livro.id_google }}" value="{{ livro.autor }}">
+                        <input type="hidden" name="editoras_{{ livro.id_google }}" value="{{ livro.editora }}">
+                        <input type="hidden" name="categorias_{{ livro.id_google }}" value="{{ livro.categoria }}">
+                        <input type="hidden" name="datas_publicacao_{{ livro.id_google }}" value="{{ livro.data_publicacao }}">
+                        <input type="hidden" name="sinopses_{{ livro.id_google }}" value="{{ livro.sinopse }}">
+                        <input type="hidden" name="capas_{{ livro.id_google }}" value="{{ livro.capa }}">
+                        <input type="hidden" name="isbn_13s_{{ livro.id_google }}" value="{{ livro.isbn_13 }}">
+                        <input type="hidden" name="isbn_10s_{{ livro.id_google }}" value="{{ livro.isbn_10 }}">
+                        <input type="hidden" name="paginas_{{ livro.id_google }}" value="{{ livro.paginas }}">
+                        <input type="hidden" name="ratings_{{ livro.id_google }}" value="{{ livro.rating }}">
+                        <input type="hidden" name="precos_{{ livro.id_google }}" value="{{ livro.preco }}">
+                    </td>
+
+                    <td>
+                        {% if livro.capa %}
+                            <img src="{{ livro.capa }}" alt="{{ livro.titulo }}" style="width:50px; height:70px; object-fit:cover;">
+                        {% else %}
+                            <img src="{% static 'img/default_book.png' %}" alt="Sem capa" style="width:50px; height:70px; object-fit:cover;">
+                        {% endif %}
+                    </td>
+
+                    <td>{{ livro.titulo }}</td>
+                    <td>{{ livro.autor }}</td>
+                    <td>{{ livro.editora }}</td>
+                    <td>
+                        {% if livro.data_publicacao %}
+                            {% if livro.data_publicacao|length == 4 %}
+                                01/01/{{ livro.data_publicacao }}
+                            {% else %}
+                                {{ livro.data_publicacao|slice:"8:10" }}/{{ livro.data_publicacao|slice:"5:7" }}/{{ livro.data_publicacao|slice:"0:4" }}
+                            {% endif %}
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-success">📚 Importar Selecionados</button>
+    </form>
+
+    <script>
+        // Marcar/desmarcar todos os checkboxes
+        document.getElementById('select_all').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('input[name="ids_google[]"]');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        });
+    </script>
+
+    {% elif resultados is not none %}
+    <p class="text-danger">Nenhum livro encontrado para sua pesquisa.</p>
+    {% endif %}
 </div>
 {% endblock %}

@@ -45,7 +45,16 @@ class LivroForm(forms.ModelForm):
 
 class BuscarLivroForm(forms.Form):
     titulo = forms.CharField(
-        label="Título do Livro",
-        max_length=200,
-        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Digite o título do livro'})
+        label="Título",
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-control w-50", "placeholder": "Digite o título do livro"}
+        )
+    )
+    autor = forms.CharField(
+        label="Autor",
+        required=False,
+        widget=forms.TextInput(
+            attrs={"class": "form-control w-50", "placeholder": "Nome do autor (opcional)"}
+        )
     )
