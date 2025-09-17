@@ -1,6 +1,6 @@
 # Livraria Online 📚
 
-Uma aplicação web construída com **Django** que simula uma livraria online completa, permitindo cadastro de livros, gerenciamento de estoque, carrinho de compras, finalização de pedidos e histórico de compras. O projeto é modularizado em apps para facilitar manutenção e escalabilidade.
+Uma aplicação web construída com **Django** que simula uma livraria online completa, permitindo cadastro de livros, carrinho de compras, finalização de pedidos e histórico de compras. O projeto é modularizado em apps para facilitar manutenção e escalabilidade.
 
 ---
 
