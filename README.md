@@ -12,7 +12,7 @@ Uma aplicação web construída com **Django** que simula uma livraria online, p
 - [Modelos de Dados](#modelos-de-dados)
 - [Instalação](#instalação)
 - [Uso](#uso)
-- [Contribuição](#contribuição)
+- [Prints](#prints)
 
 ---
 
