@@ -96,6 +96,7 @@ def verifica_cadastro_livro(book_info):
     isbn_10 = book_info.get('isbn_10')
     livro_encontrado = None
 
+    #TODO: CASO NÃO TENHA NENHUM ISBN VERIFICAR PELO TITULO
     # aplica a lógica de verificação apenas se pelo menos um dos ISBNs for válido
     if isbn_13 != "N/A" or isbn_10 != "N/A":
         q = Q()
