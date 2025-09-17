@@ -52,27 +52,79 @@ Uma aplicação web construída com **Django** que simula uma livraria online co
 
 livraria-online/
 │
-├── core/                  # Configurações globais, autenticação, páginas base
-│   ├── models.py
-│   ├── views.py
-│   ├── urls.py
-│   └── templates/core/
+├── core/               # Configurações globais, autenticação, páginas base
+│    ├── migrations/  
+│    └── templates/loja/
+│        ├── login.html
+│        └── registrar.html  
+│    ├── login.html
+│    ├── registrar.html   
+│    ├── templatetags/  
+│    │   └── form_tags.py         
+│    ├── admin.py
+│    ├── apps.py
+│    ├── decorators.py
+│    ├── forms.py
+│    ├── signals.py
+│    ├── tests.py
+│    ├── urls.py
+│    └── views.py
+│  
+├── gestao/                # Administração da livraria (cadastros internos)
+│    ├── migrations/  
+│    ├── templates/gestao/
+│        └── cadastro_livro.html
+│    ├── admin.py
+│    ├── apps.py
+│    ├── forms.py
+│    ├── functions.py
+│    ├── models.py
+│    ├── tests.py
+│    ├── urls.py
+│    └── views.py
 │
-├── gestao/                # Administração da livraria
-│   ├── models.py          # Livro, Autor, Categoria, Editora...
-│   ├── views.py
-│   ├── urls.py
-│   └── templates/gestao/
+├── loja/                  # Lado do cliente (carrinho, pedidos, histórico)
+│    ├── migrations/
+│    └── templates/loja/
+│        ├── busca_avancada.html
+│        ├── carrinho.html
+│        ├── confirmacao_pedido.html
+│        ├── detalhe_livro.html
+│        ├── detalhe_pedido.html
+│        ├── finalizar_pedido.html
+│        └── historico_pedidos.html
+│    ├── admin.py
+│    ├── apps.py
+│    ├── context_processors.py
+│    ├── models.py
+│    ├── tests.py
+│    ├── urls.py
+│    ├── views.py
 │
-├── loja/                  # Lado do cliente (carrinho, pedidos, checkout)
-│   ├── models.py          # Pedido, ItemPedido, Carrinho
-│   ├── views.py
+├── livraria_online/       # Configurações do projeto Django
+│   ├── asgi.py
+│   ├── settings.py
 │   ├── urls.py
-│   └── templates/loja/
+│   └── wsgi.py
 │
-├── static/                # Arquivos estáticos (CSS, JS, imagens)
-├── templates/             # Templates globais (base.html, footer.html, home.html)
+├── static/                # Arquivos estáticos
+│   ├── img/
+│   │   └── default_book.png
+│   └── js/
+│       └── loader.js
+│   └── estilo.css
+│
+├── templates/             # Templates globais
+│   ├── base.html
+│   ├── footer.html
+│   └── home.html
+│
+├── venv/
+├── .env
+├── .gitignore
+├── estrutura_projeto.txt
 ├── manage.py
+├── README.md
 └── requirements.txt
 
 ````
@@ -84,10 +136,10 @@ livraria-online/
 ### `Usuario`
 - Extensão do `AbstractUser` com campos adicionais:
   - `perfil` (Cliente, Administrador)
-  - `nome_completo`, `telefone`, `endereco` etc.
+  - `nome_completo`, `endereco`, `numero_endereco`, `bairro`, `cidade`, `estado`, `cep`, `email` .
 
 ### `Livro`
-- Título, autor, editora, categoria, preço, estoque, ISBN.
+- Título, autor, editora, data de publicação, categoria, total de páginas, sinopse, preço, nota, ISBN.
 
 ### `Pedido`
 - Usuário associado.
@@ -131,6 +183,7 @@ pip install -r requirements.txt
 5. Rode as migrações:
 
 ```bash
+python manage.py makemigrations
 python manage.py migrate
 ```
 
@@ -156,30 +209,8 @@ python manage.py runserver
 
 ---
 
-## Contribuição
+## Prints 
 
-Pull requests são bem-vindos!
-Antes de enviar, siga estas recomendações:
 
-1. Atualize o repositório local.
-2. Crie uma branch para a feature:
-
-```bash
-git checkout -b feature/nova-funcionalidade
-```
-
-3. Faça commit das mudanças:
-
-```bash
-git commit -m "Descrição da mudança"
-```
-
-4. Envie para o repositório remoto:
-
-```bash
-git push origin feature/nova-funcionalidade
-```
-
-5. Abra um Pull Request.
 
 ---
