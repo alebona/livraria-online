@@ -62,7 +62,7 @@
 
                 <ul class="navbar-nav ms-5">
                     {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="#">Olá, {{ user.username }}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'perfil_usuario' %}">Olá, {{ user.username }}</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Sair</a></li>
                     {% else %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Entrar</a></li>

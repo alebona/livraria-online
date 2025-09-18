@@ -14,3 +14,9 @@ class CustomUserCreationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs.update({"class": "form-control"})
+
+
+class PerfilUsuarioForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = ['nome_completo', 'endereco', 'numero_endereco', 'bairro', 'cidade', 'estado', 'cep', 'email']
