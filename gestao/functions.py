@@ -101,7 +101,7 @@ def verifica_cadastro_livro(book_info):
         if isbn_10 != "N/A":
             q |= Q(isbn_10=isbn_10)
     else:
-        q |= Q(titulo=titulo)
+        q = Q(titulo=titulo)
 
         # Verifica se o livro já existe pelo ISBN 13 ou ISBN 10
         livro_encontrado = Livro.objects.filter(q).first()
