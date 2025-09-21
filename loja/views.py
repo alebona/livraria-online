@@ -13,9 +13,13 @@ from django.db import transaction
 
 def home(request):
     # Busca os top 12 livros (pode ser por rating, por exemplo) e excluindo sem categoria
-    categoria_id = Categoria.objects.values_list('id', flat=True).get(nome='Sem Categoria')
+    categoria = Categoria.objects.filter(nome='Sem Categoria').first()
 
-    top_livros = Livro.objects.all().exclude(categoria=categoria_id).order_by('-rating')[:12]
+    if categoria:
+        top_livros = Livro.objects.exclude(categoria=categoria.id).order_by('-rating')[:12]
+    else:
+        # Se não existir "Sem Categoria", não exclui nada
+        top_livros = Livro.objects.all().order_by('-rating')[:12]
 
     return render(request, 'home.html', {
         'top_livros': top_livros,
