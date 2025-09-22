@@ -2,6 +2,8 @@
 
 Uma aplicação web construída com **Django** que simula uma livraria online, permitindo cadastro de livros, carrinho de compras, finalização de pedidos e histórico de compras. O projeto é modularizado em apps para facilitar manutenção e escalabilidade.
 
+Link: https://livraria-online-wk42.onrender.com/
+
 ---
 
 ## Sumário
