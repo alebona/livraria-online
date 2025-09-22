@@ -156,5 +156,6 @@ MESSAGE_TAGS = {
     messages.ERROR: 'alert-danger',
 }
 
-LOGIN_REDIRECT_URL = 'home' 
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_URL = '/core/login/'
+LOGIN_REDIRECT_URL = '/'        # para onde redirecionar depois do login
+LOGOUT_REDIRECT_URL = '/'
